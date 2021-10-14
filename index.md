@@ -24,7 +24,7 @@ Forward raw data from `$delay/interval/actual_topic` to `actual_topic` after `in
 Use the go template to render the data or not and forward it to the corresponding topic.
 
 #### Example
-
+{% raw %}
 Use the following `config.yml`
 
 ```yml
@@ -130,3 +130,4 @@ Send a data to `test`
     msg:I'm msg of data.
     msg2:I'm msg2 of data.
    ```
+{% endraw %}
