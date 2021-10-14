@@ -110,7 +110,7 @@ Send a data to `test`
            {{range $key,$value := .data -}}
            {{printf "%s:%s\n" $key $value}}
            {{- end}}   
-   {% raw %}
+   {% endraw %}
    ```
 
    So we will received following data from topic `test3`
