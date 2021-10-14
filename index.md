@@ -24,10 +24,10 @@ Forward raw data from `$delay/interval/actual_topic` to `actual_topic` after `in
 Use the go template to render the data or not and forward it to the corresponding topic.
 
 #### Example
-{% raw %}
 Use the following `config.yml`
 
 ```yml
+{% raw %}
 rewriter:
   delay:
     enable: true
@@ -60,6 +60,7 @@ rewriter:
               {{range $key,$value := .data -}}
               {{printf "%s:%s\n" $key $value}}
               {{- end}}
+{% endraw %}
 ```
 
 Send a data to `test`
@@ -85,7 +86,8 @@ Send a data to `test`
    This rule type is raw, then program will forward raw data to topic `test2`.
 2. Match the second rule when program forward raw data to `test2`
 
-   ```yml
+   ```yml   
+   {% raw %}
    - topic: test2
      type: json
      targets:
@@ -107,7 +109,8 @@ Send a data to `test`
            Range an object:
            {{range $key,$value := .data -}}
            {{printf "%s:%s\n" $key $value}}
-           {{- end}}
+           {{- end}}   
+   {% raw %}
    ```
 
    So we will received following data from topic `test3`
@@ -130,4 +133,3 @@ Send a data to `test`
     msg:I'm msg of data.
     msg2:I'm msg2 of data.
    ```
-{% endraw %}
