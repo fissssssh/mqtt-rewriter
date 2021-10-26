@@ -1,0 +1,37 @@
+mqtt:
+  broker: localhost
+  port: 11883
+  clientId: mqtt-rewriter
+  username:
+  password:
+delay:
+  enable: true
+template:
+  enable: true
+  rules:
+    - topic: test
+      type: raw
+      targets:
+        - topic: test2
+    - topic: test2
+      type: json
+      targets:
+        - topic: test3
+          template: |-
+            Get value: {{.msg}}
+            Get nested value: {{.data.msg}}
+            Get value of an array by index: {{index .array 0}}
+            Get json of an object: {{json .data}}
+            Get json of an array: {{json .array}}
+            Range an array: 
+            {{range $value := .array -}}
+            {{println $value}}
+            {{- end}}
+            Range an array with index: 
+            {{range $index,$value := .array -}}
+            {{printf "%d:%s\n" $index $value}}
+            {{- end}}
+            Range an object:
+            {{range $key,$value := .data -}}
+            {{printf "%s:%s\n" $key $value}}
+            {{- end}}

@@ -1,6 +1,6 @@
 package main
 
-import "mqtt-rewriter/internal/app"
+import app "mqtt-rewriter/web"
 
 func main() {
 	app.Run()

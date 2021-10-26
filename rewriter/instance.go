@@ -3,8 +3,8 @@ package rewriter
 import (
 	"fmt"
 	"log"
-	"mqtt-rewriter/internal/app/config"
-	"mqtt-rewriter/internal/rewriter/handlers"
+	"mqtt-rewriter/config"
+	"mqtt-rewriter/rewriter/handlers"
 	"sync"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
@@ -26,16 +26,20 @@ func Instance() *mqtt.Client {
 		// 连接成功回调
 		opts.OnConnect = func(c mqtt.Client) {
 			log.Println("mqtt connected!")
-			// 延时重新
-			if config.AppConfig.Rewriter.Delay.Enable {
-				log.Println("loading delay rewriter.")
-				c.Subscribe("$delay/+/+/#", 2, handlers.DelayRewriteHanler)
+			// 延时重写
+			if config.AppConfig.Delay.Enable {
+				log.Println("loading delay rewriter")
+				c.Subscribe("$delay/+/+/#", 2, func(c mqtt.Client, m mqtt.Message) {
+					go handlers.DelayRewriteHanler(c, m)
+				})
 			}
 			// 模板重写
-			if config.AppConfig.Rewriter.Template.Enable {
-				log.Println("loading template rewriter.")
-				for _, rule := range config.AppConfig.Rewriter.Template.Rules {
-					c.Subscribe(fmt.Sprintf("%s", rule.Topic), 2, handlers.TemplateRewriteHandler)
+			if config.AppConfig.Template.Enable {
+				log.Println("loading template rewriter")
+				for _, rule := range config.AppConfig.Template.Rules {
+					c.Subscribe(rule.Topic, 2, func(c mqtt.Client, m mqtt.Message) {
+						go handlers.TemplateRewriteHandler(c, m)
+					})
 				}
 			}
 		}
